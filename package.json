@@ -1,0 +1,32 @@
+{
+  "name": "question-answer-api",
+  "version": "1.0.0",
+  "description": "Express - Question Answer Api",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon --watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaliBYK/Question-Answer-Rest-Api.git"
+  },
+  "keywords": [
+    "express",
+    "rest",
+    "api",
+    "question",
+    "answer"
+  ],
+  "author": "Muhammet Ali Baykus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MaliBYK/Question-Answer-Rest-Api/issues"
+  },
+  "homepage": "https://github.com/MaliBYK/Question-Answer-Rest-Api#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
