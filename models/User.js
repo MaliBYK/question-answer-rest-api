@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+//!Hash Module
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const UserSchema = new Schema({
   name: {
     type: String,
@@ -50,6 +52,32 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+});
+//UserSchema methods
+UserSchema.methods.generateJwtFromUser = function () {
+  const { JWT_SECRET_KEY, JWT_EXPIRE } = process.env;
+  const payload = {
+    id: this._id,
+    name: this.name,
+  };
+  const token = jwt.sign(payload, JWT_SECRET_KEY, {
+    expiresIn: JWT_EXPIRE,
+  });
+  return token;
+};
+
+//Pre Hooks
+UserSchema.pre("save", function (next) {
+  if (!this.isModified("password")) next();
+
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) next(err);
+    bcrypt.hash(this.password, salt, (err, hash) => {
+      if (err) next(err);
+      this.password = hash;
+      next();
+    });
+  });
 });
 
 module.exports = mongoose.model("User", UserSchema);

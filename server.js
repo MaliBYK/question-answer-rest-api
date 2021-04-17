@@ -11,6 +11,8 @@ const customErrorHandler = require("./middlewares/errors/customErrorHandler");
 
 connectDatabase();
 
+app.use(express.json());
+
 //* Routers Middleware
 app.use("/api", routers);
 

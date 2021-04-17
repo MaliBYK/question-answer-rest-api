@@ -1,28 +1,18 @@
 const User = require("../models/User");
 const CustomError = require("../helpers/error/CustomError");
 const asyncErrorWrapper = require("express-async-handler");
+const createJwtFromUser = require("../helpers/authorization/createJwtFromUser");
 const register = asyncErrorWrapper(async (req, res, next) => {
-  const name = "Muhammet Ali";
-  const email = "mali124342gmail.com";
-  const password = "123";
-
+  const { name, email, password, role } = req.body;
   const user = await User.create({
     name,
     email,
     password,
+    role,
   });
-
-  res.status(200).json({
-    success: true,
-    data: user,
-  });
+  createJwtFromUser(user, res);
 });
-
-const errorTest = (req, res, next) => {
-  return next(new TypeError("Type Error"));
-};
 
 module.exports = {
   register,
-  errorTest,
 };
