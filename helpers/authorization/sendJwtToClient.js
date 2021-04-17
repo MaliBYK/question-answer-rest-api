@@ -1,4 +1,4 @@
-const createJwtFromUser = (user, res) => {
+const sendJwtToClient = (user, res) => {
   const token = user.generateJwtFromUser();
   res
     .status(200)
@@ -19,4 +19,4 @@ const createJwtFromUser = (user, res) => {
     });
 };
 
-module.exports = createJwtFromUser;
+module.exports = { sendJwtToClient };
