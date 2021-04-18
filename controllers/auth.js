@@ -38,12 +38,26 @@ const login = asyncErrorWrapper(async (req, res, next) => {
   if (!comparePassword(password, user.password)) {
     return next(new CustomError("Please check your credentials"), 400);
   }
-  console.log(user);
-  res.status(200).json({ success: true });
+  sendJwtToClient(user, res);
+});
+
+const logout = asyncErrorWrapper(async (req, res, next) => {
+  return res
+    .status(200)
+    .cookie({
+      httpOnly: true,
+      expires: new Date(Date.now()),
+      secure: process.env.NODE_ENV === "development" ? false : true,
+    })
+    .json({
+      success: true,
+      message: "Logout successfull",
+    });
 });
 
 module.exports = {
   register,
   getUser,
   login,
+  logout,
 };
