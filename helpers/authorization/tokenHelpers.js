@@ -4,7 +4,7 @@ const sendJwtToClient = (user, res) => {
     .status(200)
     .cookie("access_token", token, {
       expires: new Date(
-        Date.now() + parseInt(process.env.COOKIE_EXPIRE) * 1000
+        Date.now() + parseInt(process.env.COOKIE_EXPIRE) * 1000 * 60
       ),
       httpOnly: true,
       secure: process.env.NODE_ENV === "development" ? false : true,

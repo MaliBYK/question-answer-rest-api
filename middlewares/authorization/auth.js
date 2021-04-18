@@ -20,6 +20,10 @@ const getAccessToRoute = (req, res, next) => {
       );
     }
     console.log(decoded);
+    req.user = {
+      id: decoded.id,
+      name: decoded.name,
+    };
     next();
   });
 };
