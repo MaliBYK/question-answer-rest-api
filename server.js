@@ -6,6 +6,7 @@ dotenv.config({ path: "./config/env/config.env" });
 const PORT = process.env.PORT;
 const connectDatabase = require("./helpers/database/connectDatabase");
 const customErrorHandler = require("./middlewares/errors/customErrorHandler");
+const path = require("path");
 
 //* MongoDb Connection
 
@@ -15,6 +16,9 @@ app.use(express.json());
 
 //* Routers Middleware
 app.use("/api", routers);
+
+//* Static files
+app.use(express.static(path.join(__dirname, "public")));
 
 //!Error Handler
 app.use(customErrorHandler);
