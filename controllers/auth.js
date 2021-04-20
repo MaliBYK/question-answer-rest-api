@@ -88,7 +88,7 @@ const forgotPassword = asyncErrorWrapper(async (req, res, next) => {
 
   user.save();
 
-  const resetPasswordUrl = `https://localhost:5000/api/auth/resetpassword?resetPasswordToken=${user.resetPasswordToken}`;
+  const resetPasswordUrl = `http://localhost:5000/api/auth/resetpassword?resetPasswordToken=${user.resetPasswordToken}`;
 
   const emailTemplate = `
     <h3>Reset Your Password</h3>
@@ -112,7 +112,7 @@ const forgotPassword = asyncErrorWrapper(async (req, res, next) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
-    // await user.save();
+    await user.save();
 
     return next(new CustomError("Email Could Not Be Sent", 500));
   }
