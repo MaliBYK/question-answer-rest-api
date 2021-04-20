@@ -77,7 +77,6 @@ const imageUpload = asyncErrorWrapper(async (req, res, next) => {
 
 const forgotPassword = asyncErrorWrapper(async (req, res, next) => {
   const resetEmail = req.body.email;
-  console.log(req.body);
   if (!resetEmail)
     return next(new CustomError("Please provide the email address!"), 400);
 
@@ -97,8 +96,6 @@ const forgotPassword = asyncErrorWrapper(async (req, res, next) => {
     <p> This link will expire in 1 hour ! </p>
   `;
 
-  console.log(process.env.SMTP_USER);
-  console.log(resetEmail);
   try {
     await sendEmail({
       from: process.env.SMTP_USER,
