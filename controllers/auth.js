@@ -6,6 +6,7 @@ const {
   comparePassword,
 } = require("../helpers/input/validateUserInput");
 const CustomError = require("../helpers/error/CustomError");
+const sendEmail = require("../helpers/libraries/sendEmail");
 
 const register = asyncErrorWrapper(async (req, res, next) => {
   const { name, email, password, role } = req.body;
@@ -56,10 +57,68 @@ const logout = asyncErrorWrapper(async (req, res, next) => {
 });
 
 const imageUpload = asyncErrorWrapper(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      profile_image: req.savedProfileImage,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
   res.status(200).json({
     success: true,
     message: "Image Upload Successfull",
+    data: user,
   });
+});
+
+const forgotPassword = asyncErrorWrapper(async (req, res, next) => {
+  const resetEmail = req.body.email;
+  console.log(req.body);
+  if (!resetEmail)
+    return next(new CustomError("Please provide the email address!"), 400);
+
+  const user = await User.findOne({ email: resetEmail });
+  if (!user)
+    return next(new CustomError("Please provide a valid email address!"), 400);
+
+  user.getResetPasswordTokenFromUser();
+
+  user.save();
+
+  const resetPasswordUrl = `https://localhost:5000/api/auth/resetpassword?resetPasswordToken=${user.resetPasswordToken}`;
+
+  const emailTemplate = `
+    <h3>Reset Your Password</h3>
+    <p>Click <a href="${resetPasswordUrl}">this link</a> to reset your password.</p>
+    <p> This link will expire in 1 hour ! </p>
+  `;
+
+  console.log(process.env.SMTP_USER);
+  console.log(resetEmail);
+  try {
+    await sendEmail({
+      from: process.env.SMTP_USER,
+      to: resetEmail,
+      subject: "Reset Your Password",
+      html: emailTemplate,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Token successfully sent to your email address",
+    });
+  } catch {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    // await user.save();
+
+    return next(new CustomError("Email Could Not Be Sent", 500));
+  }
 });
 
 module.exports = {
@@ -68,4 +127,5 @@ module.exports = {
   login,
   logout,
   imageUpload,
+  forgotPassword,
 };
