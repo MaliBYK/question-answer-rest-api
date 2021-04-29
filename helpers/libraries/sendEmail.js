@@ -3,7 +3,6 @@ dotenv.config({ path: "./config/env/config.env" });
 const nodemailer = require("nodemailer");
 const { SMTP_USER, SMTP_PASS, SMTP_HOST, SMTP_PORT } = process.env;
 
-console.log(SMTP_USER, SMTP_PASS, SMTP_HOST, SMTP_PORT);
 const sendEmail = async mailOptions => {
   let transporter = nodemailer.createTransport({
     host: SMTP_HOST,

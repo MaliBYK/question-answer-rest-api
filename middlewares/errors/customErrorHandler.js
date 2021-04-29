@@ -7,6 +7,9 @@ const customErrorHandler = (err, req, res, next) => {
       "Duplicate Input Found : Check Yout Input",
       400
     );
+  if (customError.name === "CastError") {
+    customError = new CustomError("Please provide a valid ID", 400);
+  }
 
   if (customError.name === "SyntaxError")
     customError = new CustomError("Unexpected syntax", 400);
