@@ -1,7 +1,6 @@
 const CustomError = require("../../helpers/error/CustomError");
 const customErrorHandler = (err, req, res, next) => {
   let customError = err;
-
   if (customError?.code === 11000)
     customError = new CustomError(
       "Duplicate Input Found : Check Yout Input",

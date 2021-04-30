@@ -1,12 +1,14 @@
 const CustomError = require("../../helpers/error/CustomError");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
+const Question = require("../../models/Question");
+const asyncErrorWrapper = require("express-async-handler");
 const {
   isTokenInclueded,
   getTokenFromHeader,
 } = require("../../helpers/authorization/tokenHelpers");
 
-const getAccessToRoute = (req, res, next) => {
+const getAccessToRoute = asyncErrorWrapper(async (req, res, next) => {
   if (!isTokenInclueded(req)) {
     return next(
       new CustomError("You are not authorized to access this route!", 401)
@@ -27,9 +29,9 @@ const getAccessToRoute = (req, res, next) => {
     };
     next();
   });
-};
+});
 
-const getAdminAccess = async (req, res, next) => {
+const getAdminAccess = asyncErrorWrapper(async (req, res, next) => {
   const { id } = req.user;
   const user = await User.findById(id);
 
@@ -37,6 +39,17 @@ const getAdminAccess = async (req, res, next) => {
     return next(new CustomError("Only Admins can access this route.", 403));
 
   next();
-};
+});
 
-module.exports = { getAccessToRoute, getAdminAccess };
+const questionOwnerAccess = asyncErrorWrapper(async (req, res, next) => {
+  const userId = req.user.id;
+  const questionId = req.params.id;
+
+  const question = await Question.findById(questionId);
+  if (question.user != userId)
+    return next(new CustomError("Only owner can handle this operation!", 403));
+
+  next();
+});
+
+module.exports = { getAccessToRoute, getAdminAccess, questionOwnerAccess };
