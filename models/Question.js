@@ -28,6 +28,12 @@ const QuestionSchema = new Schema({
       ref: "User",
     },
   ],
+  answers: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Answer",
+    },
+  ],
 });
 
 QuestionSchema.pre("save", function (next) {

@@ -22,4 +22,14 @@ const checkQuestionExists = asyncErrorWrapper(async (req, res, next) => {
   next();
 });
 
-module.exports = { checkUserExists, checkQuestionExists };
+const checkAnswerExists = asyncErrorWrapper(async (req, res, next) => {
+  const { answer_id } = req.params;
+
+  const answer = await Answer.findById(answer_id);
+  if (!answer)
+    return next(new CustomError("There is no such answer with that ID"));
+
+  next();
+});
+
+module.exports = { checkUserExists, checkAnswerExists, checkQuestionExists };

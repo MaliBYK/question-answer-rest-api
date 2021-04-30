@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const answer = require("./answer");
 const {
   askNewQuestion,
   getAllQuestions,
@@ -36,5 +37,7 @@ router.get(
   [getAccessToRoute, checkQuestionExists],
   undolikeQuestion
 );
+
+router.use("/:question_id/answers", checkQuestionExists, answer);
 
 module.exports = router;
