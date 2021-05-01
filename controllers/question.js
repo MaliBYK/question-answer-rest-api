@@ -28,7 +28,7 @@ const getAllQuestions = asyncErrorWrapper(async (req, res, next) => {
 
 const getSingleQuestion = asyncErrorWrapper(async (req, res, next) => {
   const { id } = req.params;
-  const question = await Question.findById(id);
+  const question = await Question.findById(id).populate("answers");
 
   res.status(200).json({
     success: true,

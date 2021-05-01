@@ -64,4 +64,18 @@ const checkAnswerExists = asyncErrorWrapper(async (req, res, next) => {
   next();
 });
 
-module.exports = { getAccessToRoute, getAdminAccess, questionOwnerAccess };
+const answerOwnerAccess = asyncErrorWrapper(async (req, res, next) => {
+  const answer_id = req.params.answer_id;
+  const { user } = await Answer.findById(answer_id);
+  if (user != req.user.id)
+    return next(new CustomError("Only owner can access to this route", 403));
+
+  next();
+});
+
+module.exports = {
+  getAccessToRoute,
+  getAdminAccess,
+  questionOwnerAccess,
+  answerOwnerAccess,
+};
