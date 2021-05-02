@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const Answer = require("../models/Answer");
 const answer = require("./answer");
+const Question = require("../models/Question");
+const questionQueryMiddleware = require("../middlewares/query/questionQueryMiddleware");
+const answerQueryMiddleware = require("../middlewares/query/answerQueryMiddleware");
 const {
   askNewQuestion,
   getAllQuestions,
@@ -18,8 +22,35 @@ const {
   checkQuestionExists,
 } = require("../middlewares/databases/databaseErrorHelpers");
 
-router.get("/", getAllQuestions);
-router.get("/:id", checkQuestionExists, getSingleQuestion);
+router.get(
+  "/",
+  questionQueryMiddleware(Question, {
+    population: {
+      path: "user",
+      select: "name profile_image",
+    },
+  }),
+  getAllQuestions
+);
+router.get(
+  "/:id",
+  [
+    checkQuestionExists,
+    answerQueryMiddleware(Question, {
+      population: [
+        {
+          path: "user",
+          select: "name profile_image",
+        },
+        {
+          path: "answers",
+          select: "content",
+        },
+      ],
+    }),
+  ],
+  getSingleQuestion
+);
 router.post("/ask", getAccessToRoute, askNewQuestion);
 router.put(
   "/:id/edit",

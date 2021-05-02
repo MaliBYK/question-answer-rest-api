@@ -18,22 +18,14 @@ const askNewQuestion = asyncErrorWrapper(async (req, res, next) => {
 });
 
 const getAllQuestions = asyncErrorWrapper(async (req, res, next) => {
-  const questions = await Question.find();
-
-  res.status(200).json({
-    success: true,
-    data: questions,
-  });
+  res.status(200).json(res.queryResult);
 });
 
 const getSingleQuestion = asyncErrorWrapper(async (req, res, next) => {
   const { id } = req.params;
   const question = await Question.findById(id).populate("answers");
 
-  res.status(200).json({
-    success: true,
-    data: question,
-  });
+  res.status(200).json(res.queryResult);
 });
 
 const editQuestion = asyncErrorWrapper(async (req, res, next) => {
@@ -75,6 +67,7 @@ const likeQuestion = asyncErrorWrapper(async (req, res, next) => {
     return next(new CustomError("You already liked this question", 400));
 
   question.likes.push(userId);
+  question.likeCount = question.likes.length;
   question = await question.save();
 
   res.status(200).json({
@@ -96,6 +89,7 @@ const undolikeQuestion = asyncErrorWrapper(async (req, res, next) => {
 
   const index = question.likes.indexOf(userId);
   question.likes.splice(index, 1);
+  question.likeCount = question.likes.length;
   question = await question.save();
 
   res.status(200).json({
