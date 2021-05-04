@@ -30,7 +30,28 @@
   <li>>Delete others answers</li>
   <li>>Block a user</li>
 </ul>
-
+<h2>HOW TO USE IT</h2>
+  <hr>
+  <p>First off all, you need to add these thing to environment variables (or create "Config/config.env" to main folder)</p>
+  <ul>
+  <li>>PORT</li>
+  <li>>NODE_ENV("development" or "production")</li>
+  <li>>MONGO_URI (local or from mongo)</li>
+  <li>>JWT_SECRET_KEY</li>
+  <li>>JWT_EXPIRE(ex. 10m)</li>
+  <li>>COOKIE_EXPIRE(ex. 10 for 10 seconds)</li>
+  <li>>RESET_PASSWORD_EXPIRE(ex. 36000 for 1 hour)</li>
+  
+  <h4>FOR NODEMAILER (that is how we reset email with email)</h4>
+  <li>>SMTP_HOST (ex smtp.gmail.com)</li>
+  <li>>SMTP_PORT (ex. 587)</li>
+  <li>>SMTP_USER (ex. yourmail@email.com)</li>
+  <li>>SMTP_PASS (ex. yourpassword123!)</li>
+</ul>
+<hr />
+		<p>Then install the necessary packages</p>
+		<p>Finally open your terminal and type npm run start</p>
+<hr>
 <h3>
   Made by <a href="http://malibyk.github.io">MaliBYK</a>
   <h3></h3>
